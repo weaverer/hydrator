@@ -1,0 +1,22 @@
+{
+    "name": "weaverer/hydrator",
+    "description": "php data hydrate",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Weaverer\\Hydrator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mj"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.1@dev"
+    }
+}
