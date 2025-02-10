@@ -20,68 +20,84 @@ class DataType
     /** @var mixed 默认值 */
     public mixed $defaultValue;
 
-    public ArrayListType $arrayListType;
+    /** @var ArrayListType|null */
+    public ?ArrayListType $arrayListType = null;
 
-    public EnumType $enumType;
+    /** @var EnumType|null */
+    public ?EnumType $enumType = null;
 
-    public ObjectType $objectType;
+    /** @var ClassType|null */
+    public ?ClassType $classType = null;
 
     /**
      * @param string $typeName
+     * @return DataType
      */
-    public function setTypeName(string $typeName): void
+    public function setTypeName(string $typeName): self
     {
         $this->typeName = $typeName;
+        return $this;
     }
 
     /**
      * @param bool $nullable
+     * @return DataType
      */
-    public function setNullable(bool $nullable): void
+    public function setNullable(bool $nullable): self
     {
         $this->nullable = $nullable;
+        return $this;
     }
 
     /**
      * @param bool $hasDefaultValue
+     * @return DataType
      */
-    public function setHasDefaultValue(bool $hasDefaultValue): void
+    public function setHasDefaultValue(bool $hasDefaultValue): self
     {
         $this->hasDefaultValue = $hasDefaultValue;
+        return $this;
     }
 
     /**
      * @param mixed $defaultValue
+     * @return DataType
      */
-    public function setDefaultValue(mixed $defaultValue): void
+    public function setDefaultValue(mixed $defaultValue): self
     {
         $this->defaultValue = $defaultValue;
+        return $this;
     }
 
     /**
      * @param ArrayListType $arrayListType
+     * @return DataType
      */
-    public function setArrayListType(ArrayListType $arrayListType): void
+    public function setArrayListType(ArrayListType $arrayListType): self
     {
         $this->arrayListType = $arrayListType;
+        return $this;
     }
 
     /**
      * @param EnumType $enumType
+     * @return DataType
      */
-    public function setEnumType(EnumType $enumType): void
+    public function setEnumType(EnumType $enumType): self
     {
         $this->enumType = $enumType;
+        return $this;
     }
 
     /**
-     * @param ObjectType $objectType
+     * @param ClassType $objectType
+     * @return DataType
      */
-    public function setObjectType(ObjectType $objectType): void
+    public function setClassType(ClassType $objectType): self
     {
         $this->objectType = $objectType;
+        return $this;
     }
-
 
 
     public function isScalar(): bool
@@ -89,21 +105,25 @@ class DataType
         return Utils::isScalar($this->typeName);
     }
 
-    public function isList():bool
+    public function isList(): bool
     {
         return Utils::isList($this->typeName);
     }
 
-    public function isObject():bool
+    public function isObject(): bool
     {
         return Utils::isObject($this->typeName);
     }
 
-    public function isEnum():bool
+    public function isCustomClass(): bool
+    {
+        return Utils::isCustomerClass($this->typeName);
+    }
+
+    public function isEnum(): bool
     {
         return $this->typeName === Utils::ENUM;
     }
-
 
 
 }

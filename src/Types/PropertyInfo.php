@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator\Types;
 
-class PropertyInfo
+class PropertyInfo extends DataType
 {
     /**
      * @var string 属性名
@@ -11,8 +11,13 @@ class PropertyInfo
     public string $name;
 
     /**
-     * @var DataType 数据类型
+     * @param string $name
+     * @return PropertyInfo
      */
-    public DataType $dataType;
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
 
 }

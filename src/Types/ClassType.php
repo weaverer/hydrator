@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator\Types;
 
-class ObjectType
+class ClassType
 {
     public string $className;
 }

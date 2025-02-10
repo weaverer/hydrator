@@ -29,6 +29,12 @@ class Utils
         return $typeName === self::OBJECT;
     }
 
+    public static function isCustomerClass(string $typeName): bool
+    {
+        return class_exists($typeName);
+    }
+
+
     /**
      * 驼峰命名转下划线命名
      * 思路:
