@@ -8,6 +8,11 @@ use Weaverer\Hydrator\Utils;
 class DataType
 {
 
+    public bool $isScalar = false;
+    public bool $isList = false;
+    public bool $isCustomClass = false;
+    public bool $isEnum = false;
+
     /** @var string 类型名 */
     public string $typeName;
 
@@ -20,64 +25,15 @@ class DataType
     /** @var mixed 默认值 */
     public mixed $defaultValue;
 
-    /** @var ArrayListType|null */
-    public ?ArrayListType $arrayListType = null;
+    /** @var ListType|null */
+    public ?ListType $listType = null;
 
     /** @var EnumType|null */
     public ?EnumType $enumType = null;
 
-    /** @var ClassType|null */
-    public ?ClassType $classType = null;
+    /** @var string|null */
+    public ?string $classType = null;
 
-    /**
-     * @param string $typeName
-     * @return DataType
-     */
-    public function setTypeName(string $typeName): self
-    {
-        $this->typeName = $typeName;
-        return $this;
-    }
-
-    /**
-     * @param bool $nullable
-     * @return DataType
-     */
-    public function setNullable(bool $nullable): self
-    {
-        $this->nullable = $nullable;
-        return $this;
-    }
-
-    /**
-     * @param bool $hasDefaultValue
-     * @return DataType
-     */
-    public function setHasDefaultValue(bool $hasDefaultValue): self
-    {
-        $this->hasDefaultValue = $hasDefaultValue;
-        return $this;
-    }
-
-    /**
-     * @param mixed $defaultValue
-     * @return DataType
-     */
-    public function setDefaultValue(mixed $defaultValue): self
-    {
-        $this->defaultValue = $defaultValue;
-        return $this;
-    }
-
-    /**
-     * @param ArrayListType $arrayListType
-     * @return DataType
-     */
-    public function setArrayListType(ArrayListType $arrayListType): self
-    {
-        $this->arrayListType = $arrayListType;
-        return $this;
-    }
 
     /**
      * @param EnumType $enumType
@@ -90,39 +46,13 @@ class DataType
     }
 
     /**
-     * @param ClassType $objectType
+     * @param string $objectType
      * @return DataType
      */
-    public function setClassType(ClassType $objectType): self
+    public function setClassType(string $objectType): self
     {
-        $this->objectType = $objectType;
+        $this->classType = $objectType;
         return $this;
-    }
-
-
-    public function isScalar(): bool
-    {
-        return Utils::isScalar($this->typeName);
-    }
-
-    public function isList(): bool
-    {
-        return Utils::isList($this->typeName);
-    }
-
-    public function isObject(): bool
-    {
-        return Utils::isObject($this->typeName);
-    }
-
-    public function isCustomClass(): bool
-    {
-        return Utils::isCustomerClass($this->typeName);
-    }
-
-    public function isEnum(): bool
-    {
-        return $this->typeName === Utils::ENUM;
     }
 
 

@@ -5,9 +5,10 @@ namespace Weaverer\Hydrator\Parser;
 
 use ReflectionProperty;
 use Weaverer\Hydrator\Exception\HydratorException;
-use Weaverer\Hydrator\Types\ArrayListType;
+use Weaverer\Hydrator\Types\ListType;
 use Weaverer\Hydrator\Types\DataType;
 use Weaverer\Hydrator\Types\PropertyInfo;
+use Weaverer\Hydrator\Utils;
 
 class ClassPropertyParser
 {
@@ -16,6 +17,7 @@ class ClassPropertyParser
 
     /** @var array 对象缓存池 */
     private static array $classCachePools = [];
+    private NamespaceParser $namespaceParser;
 
     public function __construct(string|object $class)
     {
@@ -27,6 +29,7 @@ class ClassPropertyParser
             throw new HydratorException('Class not found: ' . $class);
         }
         $this->className = $class;
+        $this->namespaceParser = new NamespaceParser($class);
     }
 
     public function getAccessibleProperties(): array
@@ -54,38 +57,42 @@ class ClassPropertyParser
     private function parseProperty(ReflectionProperty $property, \ReflectionNamedType $refType): DataType //todo
     {
         $propertyInfo = new PropertyInfo();
-        $propertyInfo->setName($property->getName())
-            ->setNullable($refType->allowsNull())
-            ->setHasDefaultValue($property->hasDefaultValue())
-            ->setDefaultValue($property->getDefaultValue())
-            ->setTypeName($refType->getName());
-        if ($propertyInfo->isList()) {
-           $this->parsePropertyWithTypeArray($property);
+        $typeName = $refType->getName();
+        $propertyInfo->setName($property->getName());
+        $propertyInfo->nullable = $refType->allowsNull();
+        $propertyInfo->hasDefaultValue = $property->hasDefaultValue();
+        $propertyInfo->defaultValue = $property->getDefaultValue();
+        $propertyInfo->typeName = $typeName;
+
+        if (Utils::isScalar($typeName)) {
+            $propertyInfo->isScalar = true;
         }
-        if ($propertyInfo->isCustomClass()) {
-            $propertyInfo->setClassType($refType->getName());
+        if(Utils::isList($typeName) && $type = $this->parsePropertyWithTypeArray($property)){
+            $propertyInfo->listType = $type;
+            $propertyInfo->isList = true;
         }
-        if ($propertyInfo->isEnum()) {
-            $propertyInfo->setEnumType($refType->getName());
+
+        if(!$refType->isBuiltin()){ //不是类、枚举、接口或 trait 的类型。
+
         }
+
+
+
         return $propertyInfo;
     }
 
     /**
      * 解析数组(list)类型的属性
      * @param ReflectionProperty $property
-     * @return ArrayListType|null
+     * @return ListType|null
      */
-    public function parsePropertyWithTypeArray(ReflectionProperty $property): ?ArrayListType
+    public function parsePropertyWithTypeArray(ReflectionProperty $property): ?ListType
     {
-        $arrayType = new ArrayListType();
-        $res = $property->getDocComment();
-        if($res === false){
+        $docComment = $property->getDocComment();
+        if (false === $docComment) {
             return null;
         }
-
-
-
+        return (new ArrayDocParser($docComment, $this->namespaceParser))->parsePropertyDoc();
     }
 
 

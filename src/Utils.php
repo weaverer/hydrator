@@ -6,27 +6,27 @@ namespace Weaverer\Hydrator;
 class Utils
 {
 
-    public const string STRING  = 'string';
-    public const string INT     = 'int';
-    public const string FLOAT   = 'float';
-    public const string BOOL    = 'bool';
-    public const string ARRAY   = 'array';
-    public const string OBJECT  = 'object';
-    public const string ENUM    = 'enum';
+    public const string STRING = 'string';
+    public const string INT = 'int';
+    public const string FLOAT = 'float';
+    public const string BOOL = 'bool';
+    public const string ARRAY = 'array';
+    public const string OBJECT = 'object';
+    public const string ENUM = 'enum';
 
     public static function isScalar(string $typeName): bool
     {
-        return in_array($typeName, [self::INT, self::FLOAT, self::STRING, self::BOOL], true);
+        return in_array(strtolower($typeName), [self::INT, self::FLOAT, self::STRING, self::BOOL], true);
     }
 
     public static function isList(string $typeName): bool
     {
-        return $typeName === self::ARRAY;
+        return strtolower($typeName) === self::ARRAY;
     }
 
     public static function isObject(string $typeName): bool
     {
-        return $typeName === self::OBJECT;
+        return strtolower($typeName) === self::OBJECT;
     }
 
     public static function isCustomerClass(string $typeName): bool
