@@ -34,26 +34,4 @@ class DataType
     /** @var string|null */
     public ?string $classType = null;
 
-
-    /**
-     * @param EnumType $enumType
-     * @return DataType
-     */
-    public function setEnumType(EnumType $enumType): self
-    {
-        $this->enumType = $enumType;
-        return $this;
-    }
-
-    /**
-     * @param string $objectType
-     * @return DataType
-     */
-    public function setClassType(string $objectType): self
-    {
-        $this->classType = $objectType;
-        return $this;
-    }
-
-
 }

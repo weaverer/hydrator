@@ -151,6 +151,6 @@ class ArrayDocParserTest extends \PHPUnit\Framework\TestCase
     {
         $ref = new \ReflectionClass(ArrayDemo1::class);
 
-        var_dump( $ref->getProperty('enum')->getType()->isBuiltin());
+        var_dump( class_exists($ref->getProperty('enum')->getType()->getName()));
     }
 }

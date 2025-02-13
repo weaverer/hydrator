@@ -54,7 +54,7 @@ class ClassPropertyParser
         return $result;
     }
 
-    private function parseProperty(ReflectionProperty $property, \ReflectionNamedType $refType): DataType //todo
+    private function parseProperty(ReflectionProperty $property, \ReflectionNamedType $refType): DataType
     {
         $propertyInfo = new PropertyInfo();
         $typeName = $refType->getName();
@@ -67,16 +67,23 @@ class ClassPropertyParser
         if (Utils::isScalar($typeName)) {
             $propertyInfo->isScalar = true;
         }
-        if(Utils::isList($typeName) && $type = $this->parsePropertyWithTypeArray($property)){
+        if (Utils::isList($typeName) && $type = $this->parsePropertyWithTypeArray($property)) {
             $propertyInfo->listType = $type;
             $propertyInfo->isList = true;
         }
 
-        if(!$refType->isBuiltin()){ //不是类、枚举、接口或 trait 的类型。
-
+        if (!$refType->isBuiltin() && class_exists($typeName)) { //类、枚举、接口或 trait 的类型。
+            if ((new \ReflectionClass($typeName))->isEnum()) {
+                $enumParser = (new EnumParser($typeName));
+                if ($enumParser->isBacked()) {
+                    $propertyInfo->isEnum = true;
+                    $propertyInfo->enumType = $enumParser->parseBacked();
+                }
+            } else {
+                $propertyInfo->isCustomClass = true;
+                $propertyInfo->classType = $typeName;
+            }
         }
-
-
 
         return $propertyInfo;
     }
