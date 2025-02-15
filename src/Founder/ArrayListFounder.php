@@ -18,7 +18,8 @@ class ArrayListFounder extends Founder
         return $this;
     }
 
-    public function found($value)
+
+    public function found($value, ?string $mapWayName = null): ?array
     {
         $value = $this->toConvertValue($value);
         if (null === $value) {
@@ -30,33 +31,35 @@ class ArrayListFounder extends Founder
         if (empty($value)) {
             return [];
         }
-        $this->formatValue($value, $this->listType->depth, $this->listType->type, $this->listType->isScalar);
-        return $value;
+        return $this->formatValue($value, $this->listType->depth, $this->listType->type, $this->listType->isScalar,$mapWayName);
     }
 
 
-    private function formatValue(array $data, int $depth, string $itemType, bool $itemIsScalar): array
+    private function formatValue(array $data, int $depth, string $itemType, bool $itemIsScalar,?string $mapWayName): array
     {
         $depth--;
         if ($depth > 0) {
             $newList = [];
             foreach ($data as $value) {
-                $newList[] = $this->formatValue($value, $depth, $itemType, $itemIsScalar);
+                $newList[] = $this->formatValue($value, $depth, $itemType, $itemIsScalar,$mapWayName);
             }
         } else {
             if (empty($data)) {
                 return [];
             }
+
             $newList = [];
             if ($itemIsScalar) {
                 foreach ($data as $value) {
-                    $value = FounderFactory::getScalarFounder($itemType, [])->found($value);
+                    $value = FounderFactory::getScalarFounder($itemType, [])->found($value,$mapWayName);
                     $newList[] = $value;
                 }
             } else {
-                $founder = FounderFactory::getClassFounder($itemType, []);
                 foreach ($data as $value) {
-                    $value = $founder->found($value);
+                    if (is_array($value) && array_is_list($value)) {
+                        $this->throwTypeError(Utils::OBJECT, $value);
+                    }
+                    $value = FounderFactory::getClassFounder($itemType, [])->found($value,$mapWayName);
                     $newList[] = $value;
                 }
             }

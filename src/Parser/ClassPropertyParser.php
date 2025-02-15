@@ -127,7 +127,7 @@ class ClassPropertyParser
             }
 
             if (is_subclass_of($className, ValueConvertInterface::class)) {
-                $annotations->valueConvert[$className] = $attribute->newInstance();
+                $annotations->valueConvert[] = $attribute->newInstance();
             }
 
             if (is_subclass_of($className, MapFromInterface::class)) {

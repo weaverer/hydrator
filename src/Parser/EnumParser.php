@@ -26,7 +26,7 @@ class EnumParser
         $type->backingType = $this->enumRef->getBackingType()->getName();
         $cases = $this->enumRef->getCases();
         $type->values = array_map(function ($case) {
-            return $case->getValue();
+            return $case->getValue()->value;
         }, $cases);
         return $type;
     }

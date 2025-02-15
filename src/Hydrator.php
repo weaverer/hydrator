@@ -40,7 +40,7 @@ class Hydrator
                 continue;
             }
             $value = $data[$fromIndex];
-            $newValue = FounderFactory::createFounder($propertyInfo)->found($value);
+            $newValue = FounderFactory::createFounder($propertyInfo)->found($value,$mapWay);
             $this->setPropertyValue($propertyName, $newValue);
         }
     }
@@ -60,13 +60,16 @@ class Hydrator
 
     /**
      * @param PropertyInfo $propertyInfo
-     * @param class-string|null $mapWay
+     * @param class-string|null $mapWayName
      * @return ?string
      */
-    private function getMapFromIndex(PropertyInfo $propertyInfo, ?string $mapWay): ?string
+    private function getMapFromIndex(PropertyInfo $propertyInfo, ?string $mapWayName): ?string
     {
-        if ($mapWay) {
-            return $propertyInfo->attributes?->mapFrom[$mapWay];
+        if ($mapWayName) {
+            $mapWay = $propertyInfo->attributes?->mapFrom[$mapWayName] ?? null;
+            if ($mapWay) {
+                return $mapWay->getMapFromName();
+            }
         }
         return null;
     }

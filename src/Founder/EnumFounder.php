@@ -17,7 +17,7 @@ class EnumFounder extends Founder
         return $this;
     }
 
-    public function found($value): ?BackedEnum
+    public function found($value,?string $mapWayName = null): ?BackedEnum
     {
         if (is_a($value, $this->typeName)) {
             $value = $value->value;

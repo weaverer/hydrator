@@ -8,7 +8,7 @@ use Weaverer\Hydrator\Utils;
 class ScalarFounder extends Founder
 {
 
-    public function found($value): float|bool|int|string|null
+    public function found($value, ?string $mapWayName = null): float|bool|int|string|null
     {
         $value = $this->toConvertValue($value);
         if (null === $value) {

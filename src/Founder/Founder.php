@@ -14,7 +14,7 @@ class Founder
 
     protected string $typeName;
 
-    public function found($value)
+    public function found($value,?string $mapWayName = null)
     {
         return $value;
     }

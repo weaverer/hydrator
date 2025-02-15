@@ -7,11 +7,11 @@ use Weaverer\Hydrator\Utils;
 
 class ClassFounder extends Founder
 {
-    public function toFound($value)
+    public function found($value, ?string $mapWayName = null): ?object
     {
         $value = $this->toConvertValue($value);
         if (null === $value || is_object($value) || is_array($value)) {
-             return new ($this->typeName)($value);
+             return new ($this->typeName)($value,$mapWayName);
         }
         $this->throwTypeError(Utils::OBJECT, $value);
     }

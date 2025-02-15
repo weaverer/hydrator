@@ -7,7 +7,7 @@ use Attribute;
 use Weaverer\Hydrator\Interface\AnnotationInterface;
 use Weaverer\Hydrator\Interface\ValueConvertInterface;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_PROPERTY|Attribute::IS_REPEATABLE)]
 class Convert implements ValueConvertInterface,AnnotationInterface
 {
     /**

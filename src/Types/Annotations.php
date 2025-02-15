@@ -11,6 +11,6 @@ class Annotations
     /** @var array<string,MapFromInterface> */
     public array $mapFrom = [];
 
-    /** @var array<string,ValueConvertInterface> */
+    /** @var ValueConvertInterface[] */
     public array $valueConvert = [];
 }

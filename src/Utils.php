@@ -75,4 +75,12 @@ class Utils
         }
         return json_encode($var, JSON_UNESCAPED_UNICODE);
     }
+
+    public static function date(string $format = 'Y-m-d H:i:s', int $timestamp = 0): string
+    {
+        if ($timestamp === 0) {
+            $timestamp = time();
+        }
+        return date($format, $timestamp);
+    }
 }
