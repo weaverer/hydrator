@@ -8,14 +8,18 @@ use Weaverer\Hydrator\Parser\ClassPropertyParser;
 
 trait HydrateTrait
 {
-    public function __construct(array|object|null $data, ?MapFromInterface $mapWay = null)
+    public function hydrate()
     {
-        self::hydrate($this, $data, $mapWay);
+
+    }
+    protected function beforeHydrate(&$data)
+    {
+
     }
 
-    public static function hydrate(object|string $object, array|object|null $data, ?MapFromInterface $mapWay = null)
+    protected function afterHydrate()
     {
-        $properties = (new ClassPropertyParser($object))->getAccessibleProperties();
+
     }
 
 }

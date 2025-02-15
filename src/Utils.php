@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator;
 
+use Weaverer\Hydrator\Founder\ScalarFounder;
+
 class Utils
 {
 
@@ -14,9 +16,11 @@ class Utils
     public const string OBJECT = 'object';
     public const string ENUM = 'enum';
 
+    public const array SCALAR_TYPE = [self::INT, self::FLOAT, self::STRING, self::BOOL];
+
     public static function isScalar(string $typeName): bool
     {
-        return in_array(strtolower($typeName), [self::INT, self::FLOAT, self::STRING, self::BOOL], true);
+        return in_array(strtolower($typeName), self::SCALAR_TYPE, true);
     }
 
     public static function isList(string $typeName): bool
@@ -64,4 +68,11 @@ class Utils
         return lcfirst(str_replace(' ', '', ucwords(str_replace($separator, ' ', $words))));
     }
 
+    public static function varToString(mixed $var): string
+    {
+        if (Utils::isScalar(gettype($var))) {
+            return (string)$var;
+        }
+        return json_encode($var, JSON_UNESCAPED_UNICODE);
+    }
 }

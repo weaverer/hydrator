@@ -14,7 +14,8 @@ class ListType
     /** @var bool $isScalar 数组元素是否是标量 */
     public bool $isScalar;
 
-    public function __construct(int $depth, string $type, bool $isScalar)
+
+    public function __construct(int $depth, string $type, bool $isScalar, bool $itemAllowNull = false)
     {
         $this->depth = $depth;
         $this->type = $type;

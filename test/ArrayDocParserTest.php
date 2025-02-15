@@ -6,6 +6,7 @@ namespace Weaverer\Hydrator\Tests;
 use Weaverer\Hydrator\Parser\ArrayDocParser;
 use Weaverer\Hydrator\Parser\NamespaceParser;
 use Weaverer\Hydrator\Tests\TestClass\ArrayDemo1;
+use Weaverer\Hydrator\Tests\TestClass\StringEnum;
 
 class ArrayDocParserTest extends \PHPUnit\Framework\TestCase
 {
@@ -147,10 +148,4 @@ class ArrayDocParserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($arrayType->isScalar);
     }
 
-    public function testIsisBuiltin()
-    {
-        $ref = new \ReflectionClass(ArrayDemo1::class);
-
-        var_dump( class_exists($ref->getProperty('enum')->getType()->getName()));
-    }
 }

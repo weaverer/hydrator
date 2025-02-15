@@ -2,3 +2,12 @@
 - 类属性为析public,非静态属性,有类型的,可读写的的属性;目前不支持联合类型和交集类型;
 - 类属性的数据类型支持标量,list类型数组(需要doc说明),类类型,枚举类型(回退枚举)
 - list类型是标量和class,目前不支持枚举类型
+
+### 类属性类型
+#### 注解接口
+1. AnnotationInterface:实现AnnotationInterface的注解才能被收集,所有的注解都是AnnotationInterface的子类
+2. MapFromInterface:实现MapFromInterface的注解才能在将数据转成对象属性时指定源数据的名称(如 DbField 和 RequestField)
+3. ValueConvertInterface:实现ValueConvertInterface的注解才能在将数据转成对象属性时指定转换器,注意会先转换再赋值给对象
+### 数组
+1. 注解支持数组的数据转换
+2. 在绑定数组数据时不会过滤null,如定义int[]类型的属性,传入的数据为[1,2,null,3],属性就是[1,2,null,3],不会过滤null,如果需要过滤null,请在转换器中处理或者加前置检验

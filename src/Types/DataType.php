@@ -34,4 +34,7 @@ class DataType
     /** @var string|null */
     public ?string $classType = null;
 
+    /** @var Annotations|null 属性 */
+    public ?Annotations $attributes = null;
+
 }

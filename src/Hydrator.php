@@ -3,14 +3,73 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator;
 
-use Weaverer\Hydrator\Interface\ToJsonInterface;
-use Weaverer\Hydrator\Trait\ArrayAccessTrait;
-use Weaverer\Hydrator\Trait\HydrateTrait;
-use Weaverer\Hydrator\Trait\ToJsonTrait;
+use Weaverer\Hydrator\Founder\FounderFactory;
+use Weaverer\Hydrator\Parser\ClassPropertyParser;
+use Weaverer\Hydrator\Types\PropertyInfo;
 
-class Hydrator implements \ArrayAccess, ToJsonInterface
+class Hydrator
 {
-    use ArrayAccessTrait, ToJsonTrait, HydrateTrait;
+
+    public object $instance;
+
+    public function __construct(object $object)
+    {
+        $this->instance = $object;
+    }
+
+    /**
+     * @param array|object|null $data
+     * @param class-string|null $mapWay
+     * @return void
+     * @throws Exception\HydratorException
+     * @throws \ReflectionException
+     */
+    public function hydrate(array|object|null $data, ?string $mapWay = null)
+    {
+        if (!$data) {
+            return;
+        }
+        if (is_object($data) && !($data instanceof \ArrayAccess)) {
+            $data = (array)$data;
+        }
+        $properties = (new ClassPropertyParser($this->instance))->getAccessibleProperties();
+        foreach ($properties as $propertyName => $propertyInfo) {
+            //1.根据MapFromInterface接口的实现类,获取数据的key,如果没有实现,则使用属性名
+            $fromIndex = $this->getMapFromIndex($propertyInfo, $mapWay) ?? $propertyName;
+            if (!key_exists($fromIndex, $data)) {
+                continue;
+            }
+            $value = $data[$fromIndex];
+            $newValue = FounderFactory::createFounder($propertyInfo)->found($value);
+            $this->setPropertyValue($propertyName, $newValue);
+        }
+    }
+
+
+    /**
+     * 设置属性值
+     *
+     * @param string $property
+     * @param $value
+     */
+    private function setPropertyValue(string $property, $value): void
+    {
+
+        $this->instance->{$property} = $value;
+    }
+
+    /**
+     * @param PropertyInfo $propertyInfo
+     * @param class-string|null $mapWay
+     * @return ?string
+     */
+    private function getMapFromIndex(PropertyInfo $propertyInfo, ?string $mapWay): ?string
+    {
+        if ($mapWay) {
+            return $propertyInfo->attributes?->mapFrom[$mapWay];
+        }
+        return null;
+    }
 
 
 }

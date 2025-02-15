@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Weaverer\Hydrator\Attribute;
 
 use Attribute;
+use Weaverer\Hydrator\Interface\AnnotationInterface;
 use Weaverer\Hydrator\Interface\MapFromInterface;
 
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY)]
-readonly class RequestField implements MapFromInterface
+readonly class RequestField implements MapFromInterface,AnnotationInterface
 {
 
     /**

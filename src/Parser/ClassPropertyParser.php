@@ -5,6 +5,10 @@ namespace Weaverer\Hydrator\Parser;
 
 use ReflectionProperty;
 use Weaverer\Hydrator\Exception\HydratorException;
+use Weaverer\Hydrator\Interface\AnnotationInterface;
+use Weaverer\Hydrator\Interface\MapFromInterface;
+use Weaverer\Hydrator\Interface\ValueConvertInterface;
+use Weaverer\Hydrator\Types\Annotations;
 use Weaverer\Hydrator\Types\ListType;
 use Weaverer\Hydrator\Types\DataType;
 use Weaverer\Hydrator\Types\PropertyInfo;
@@ -32,6 +36,10 @@ class ClassPropertyParser
         $this->namespaceParser = new NamespaceParser($class);
     }
 
+    /**
+     * @return array<string,PropertyInfo>
+     * @throws \ReflectionException
+     */
     public function getAccessibleProperties(): array
     {
         if (isset(self::$classCachePools[$this->className])) {
@@ -84,6 +92,7 @@ class ClassPropertyParser
                 $propertyInfo->classType = $typeName;
             }
         }
+        $propertyInfo->attributes = $this->parserAttribute($property);
 
         return $propertyInfo;
     }
@@ -100,6 +109,33 @@ class ClassPropertyParser
             return null;
         }
         return (new ArrayDocParser($docComment, $this->namespaceParser))->parsePropertyDoc();
+    }
+
+    /**
+     * 解析属性的属性
+     * @param ReflectionProperty $property
+     * @return Annotations
+     */
+    public function parserAttribute(ReflectionProperty $property): Annotations
+    {
+        $attributes = $property->getAttributes();
+        $annotations = new Annotations();
+        foreach ($attributes as $attribute) {
+            $className = $attribute->getName();
+            if (!is_subclass_of($className, AnnotationInterface::class)) {
+                continue;
+            }
+
+            if (is_subclass_of($className, ValueConvertInterface::class)) {
+                $annotations->valueConvert[$className] = $attribute->newInstance();
+            }
+
+            if (is_subclass_of($className, MapFromInterface::class)) {
+                $annotations->mapFrom[$className] = $attribute->newInstance();
+            }
+
+        }
+        return $annotations;
     }
 
 
