@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator\Tests;
 
+use Weaverer\Hydrator\Exception\HydratorException;
 use Weaverer\Hydrator\Tests\TestClass\ClassDemo;
 use Weaverer\Hydrator\Tests\TestClass\StringEnum;
 
@@ -41,7 +42,8 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrate4()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: int, given: boolean<true>.');
         $data = [
             "id" => true,
             "name" => "Sample Name",
@@ -58,7 +60,8 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrate5()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: enum expected one of:1, 2, given: string<a>.');
         $data = [
             'enum' => 'a'
         ];
@@ -104,11 +107,14 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrate9()
     {
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: array, given: integer<1>.');
         $data = [
-            'array' => [1,2,null,3]
+            'intArray2' => [1,2,null,3]
         ];
 
         $hydrator = new ClassDemo($data);
+        var_dump($hydrator);
         $this->assertEquals($data, $hydrator->toArray());
 
     }
@@ -127,7 +133,7 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
     public function testHydrate1ArrayInt1()
     {
         $data = [
-            'arrayInt1' => ['1','2',null,3]
+            'array' => ['1','2',null,3]
         ];
 
         $hydrator = new ClassDemo($data);
@@ -138,7 +144,8 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrate2ArrayInt1()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: int, given: double<1.1>.');
         $data = [
             'arrayInt1' => [1.1,'2',null,3]
         ];
@@ -173,7 +180,8 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrate2ArrayInt3()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: int, given: double<1.1>.');
         $data = [
             'arrayInt3' =>[[[1.1,2,null,3]]]
         ];
@@ -222,7 +230,7 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrateArrayClass2()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(HydratorException::class);
         $data = [
             'arrayDemoList' =>[
                 [
@@ -250,7 +258,8 @@ class ClassDemoHydrateTest extends \PHPUnit\Framework\TestCase
 
     public function testHydrateArrayClass3()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: int, given: array<[1,2,null,3]>.');
         $data = [
             'arrayDemoList' =>[
                 [

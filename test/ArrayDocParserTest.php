@@ -139,6 +139,7 @@ class ArrayDocParserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($arrayType->isScalar);
     }
 
+
     public function testParse10()
     {
         $doc = (new \ReflectionClass($this))->getProperty('code10Null')->getDocComment();

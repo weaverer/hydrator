@@ -35,6 +35,11 @@ class ClassDemo extends AutoHydrate
     public array $array;
 
     /**
+     * @var int[][]
+     */
+    public array $intArray2;
+
+    /**
      * @var int[]
      */
     #[RequestField('array_int', 'arrayInt', '整数数组')]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Weaverer\Hydrator\Founder;
 
 use BackedEnum;
+use Weaverer\Hydrator\Exception\HydratorTypeError;
 use Weaverer\Hydrator\Types\EnumType;
 use Weaverer\Hydrator\Utils;
 
@@ -38,10 +39,7 @@ class EnumFounder extends Founder
         }
 
         if (!in_array($value, $this->enumType->values, true)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid enum value provided: %s. Expected one of the following: %s.',
-                $value,
-                implode(', ', $this->enumType->values)));
+            throw new HydratorTypeError(sprintf("enum expected one of:%s",implode(', ', $this->enumType->values)), $value);
         }
         return $this->typeName::from($value);
 

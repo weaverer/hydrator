@@ -9,13 +9,6 @@ use Weaverer\Hydrator\Types\ListType;
 
 class FounderFactory
 {
-
-    public static ArrayListFounder $arrayListFounder;
-    public static ScalarFounder $ScalarFounder;
-    public static EnumFounder $EnumFounder;
-    public static ClassFounder $ClassFounder;
-    public static Founder $defaultFounder;
-
     public static function createFounder(DataType $dataType): Founder
     {
         return match (true) {
@@ -29,10 +22,7 @@ class FounderFactory
 
     public static function getArrayListFounder(string $typeName, array $valueConvert, ListType $listType): ArrayListFounder
     {
-        if (!isset(self::$arrayListFounder)) {
-            self::$arrayListFounder = new ArrayListFounder();
-        }
-        return self::$arrayListFounder
+        return (new ArrayListFounder())
             ->setTypeName($typeName)
             ->setListType($listType)
             ->setValueConvert($valueConvert);
@@ -40,39 +30,32 @@ class FounderFactory
 
     public static function getScalarFounder(string $typeName, array $valueConvert): ScalarFounder
     {
-        if (!isset(self::$ScalarFounder)) {
-            self::$ScalarFounder = new ScalarFounder();
-        }
-        return self::$ScalarFounder
+
+        return (new ScalarFounder())
             ->setTypeName($typeName)
             ->setValueConvert($valueConvert);
     }
 
     public static function getEnumFounder(string $typeName, array $valueConvert, EnumType $enumType): EnumFounder
     {
-        if (!isset(self::$EnumFounder)) {
-            self::$EnumFounder = new EnumFounder();
-        }
-        return self::$EnumFounder->setTypeName($typeName)
+
+        return (new EnumFounder())
+            ->setTypeName($typeName)
             ->setValueConvert($valueConvert)
             ->setEnumType($enumType);
     }
 
     public static function getClassFounder(string $typeName, array $valueConvert): ClassFounder
     {
-        if (!isset(self::$ClassFounder)) {
-            self::$ClassFounder = new ClassFounder();
-        }
-        return self::$ClassFounder->setTypeName($typeName)
+
+        return (new ClassFounder())->setTypeName($typeName)
             ->setValueConvert($valueConvert);
     }
 
     public static function getDefaultFounder(string $typeName): Founder
     {
-        if (!isset(self::$defaultFounder)) {
-            self::$defaultFounder = new Founder();
-        }
-        return self::$defaultFounder->setTypeName($typeName)
+
+        return (new Founder())->setTypeName($typeName)
             ->setValueConvert([]);
     }
 

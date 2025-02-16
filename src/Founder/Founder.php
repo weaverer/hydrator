@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator\Founder;
 
+use Weaverer\Hydrator\Exception\HydratorTypeError;
 use Weaverer\Hydrator\Interface\ValueConvertInterface;
 use Weaverer\Hydrator\Types\DataType;
 use Weaverer\Hydrator\Utils;
@@ -47,6 +48,6 @@ class Founder
 
     protected function throwTypeError(string $expectedType, mixed $value): void
     {
-        throw new \TypeError(sprintf('parameter type expected %s, %s given,value: %s', $expectedType, gettype($value), Utils::varToString($value)));
+        throw new HydratorTypeError($expectedType, $value);
     }
 }

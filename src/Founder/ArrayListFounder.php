@@ -21,6 +21,7 @@ class ArrayListFounder extends Founder
 
     public function found($value, ?string $mapWayName = null): ?array
     {
+
         $value = $this->toConvertValue($value);
         if (null === $value) {
             return null;
@@ -41,13 +42,15 @@ class ArrayListFounder extends Founder
         if ($depth > 0) {
             $newList = [];
             foreach ($data as $value) {
+                if(!is_array($value)){
+                    $this->throwTypeError(Utils::ARRAY, $value);
+                }
                 $newList[] = $this->formatValue($value, $depth, $itemType, $itemIsScalar,$mapWayName);
             }
         } else {
             if (empty($data)) {
                 return [];
             }
-
             $newList = [];
             if ($itemIsScalar) {
                 foreach ($data as $value) {
@@ -56,8 +59,8 @@ class ArrayListFounder extends Founder
                 }
             } else {
                 foreach ($data as $value) {
-                    if (is_array($value) && array_is_list($value)) {
-                        $this->throwTypeError(Utils::OBJECT, $value);
+                    if (is_array($value) && !empty($value) && array_is_list($value)) { //需要是对象
+                        $this->throwTypeError(Utils::ARRAY, $value);
                     }
                     $value = FounderFactory::getClassFounder($itemType, [])->found($value,$mapWayName);
                     $newList[] = $value;
