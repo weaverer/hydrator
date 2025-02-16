@@ -286,6 +286,7 @@ class ClassDemoHydrateTest1 extends \PHPUnit\Framework\TestCase
     public function testHydrateArrayClass3()
     {
         $this->expectException(HydratorException::class);
+        $this->expectExceptionMessage('Expected type: array, given: array<{"0":1,"1":2,"2":null,"3":3,"a":1}>.');
         $data = [
             'array_demo_list' =>[
                 [
@@ -293,13 +294,12 @@ class ClassDemoHydrateTest1 extends \PHPUnit\Framework\TestCase
                     'String' => 'string',
                     'intger' => 1,
                     'double' => 1.1,
-                    'list' => [[1,2,null,3]],
+                    'list' => [1,2,null,3,"a"=>1],
                 ],
             ]
         ];
+
         $hydrator = new ClassDemo($data,RequestField::class);
-        var_dump($hydrator);
-     //   $this->assertEquals($result, $hydrator->toArray());
     }
 
 

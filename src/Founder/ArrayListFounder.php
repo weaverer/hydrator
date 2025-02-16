@@ -51,6 +51,9 @@ class ArrayListFounder extends Founder
             if (empty($data)) {
                 return [];
             }
+            if(!array_is_list($data)){
+                $this->throwTypeError(Utils::ARRAY, $data);
+            }
             $newList = [];
             if ($itemIsScalar) {
                 foreach ($data as $value) {
