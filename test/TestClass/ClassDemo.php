@@ -10,25 +10,26 @@ use Weaverer\Hydrator\AutoHydrate;
 class ClassDemo extends AutoHydrate
 {
 
+    #[RequestField('id', 'ID',['int','required'])]
     public int $id;
     public string $name;
     public float $price;
-    #[RequestField('is_enable', 'isEnable', '是否启用')]
+    #[RequestField('is_enable', 'isEnable')]
     public bool $isEnable;
 
-    #[RequestField('desc', 'desc', '描述')]
+    #[RequestField('desc', 'desc')]
     public ?string $description;
 
-    #[RequestField('category_id', 'categoryId', '分类ID')]
+    #[RequestField('category_id', 'categoryId')]
     public ?int $categoryId;
 
-    #[RequestField('discount', 'discount', '折扣')]
+    #[RequestField('discount', 'discount')]
     public ?float $discount;
 
-    #[RequestField('is_hot', 'isHot', '是否热门')]
+    #[RequestField('is_hot', 'isHot')]
     public ?bool $isHot;
 
-    #[RequestField('is_new', 'isNew', '是否新品')]
+    #[RequestField('is_new', 'isNew')]
     public StringEnum $enum;
 
 
@@ -42,25 +43,25 @@ class ClassDemo extends AutoHydrate
     /**
      * @var int[]
      */
-    #[RequestField('array_int', 'arrayInt', '整数数组')]
+    #[RequestField('array_int', 'arrayInt')]
     public array $arrayInt1;
 
     /**
      * @var int[][][]
      */
-    #[RequestField('array_int2', 'arrayInt2', '整数数组2')]
+    #[RequestField('array_int2', 'arrayInt2')]
     public array $arrayInt3;
 
     /**
      * @var ArrayDemo1[] $arrayDemo2
      */
-    #[RequestField('array_demo_list', 'arrayDemoList', '数组Demo列表')]
+    #[RequestField('array_demo_list', 'arrayDemoList')]
     public array $arrayDemoList;
 
-    #[RequestField('array_demo1', 'arrayDemo1', '数组Demo1')]
+    #[RequestField('array_demo1', 'arrayDemo1')]
     public ArrayDemo1 $arrayDemo1;
 
-    #[RequestField('datetime', 'arrayDemo2', '数组Demo2')]
+    #[RequestField('datetime', 'arrayDemo2')]
     #[Convert('strtotime')]
     #[Convert('date', 'Y-m-d H:i:s+9','$var')]
     public string $date;

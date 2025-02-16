@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator;
 
+use Weaverer\Hydrator\Attribute\RequestField;
 use Weaverer\Hydrator\Exception\HydratorTypeError;
 use Weaverer\Hydrator\Founder\FounderFactory;
 use Weaverer\Hydrator\Parser\ClassPropertyParser;
+use Weaverer\Hydrator\Types\ClassInfo;
 use Weaverer\Hydrator\Types\PropertyInfo;
 
 class Hydrator
@@ -25,17 +27,19 @@ class Hydrator
      * @throws Exception\HydratorException
      * @throws \ReflectionException
      */
-    public function hydrate(array|object|null $data, ?string $mapWay = null)
+    public function hydrate(array|object|null $data, ?string $mapWay = null): void
     {
-        if (!$data) {
-            return;
-        }
+        $data = $data ?? [];
         if (is_object($data) && !($data instanceof \ArrayAccess)) {
             $data = (array)$data;
         }
-        $properties = (new ClassPropertyParser($this->instance))->getAccessibleProperties();
+        $classInfo = (new ClassPropertyParser($this->instance))->getAccessibleProperties();
+        $this->verifyIfRequest($data,$classInfo,$mapWay);
+        if(empty($data)){//如果数据为空,则直接返回(放在校验之后,是为了先走请求参数的校验规则)
+            return;
+        }
         try {
-            foreach ($properties as $propertyName => $propertyInfo) {
+            foreach ($classInfo->properties as $propertyName => $propertyInfo) {
                 //1.根据MapFromInterface接口的实现类,获取数据的key,如果没有实现,则使用属性名
                 $fromIndex = $this->getMapFromIndex($propertyInfo, $mapWay) ?? $propertyName;
                 if (!key_exists($fromIndex, $data)) {
@@ -48,7 +52,14 @@ class Hydrator
         }catch (\TypeError|\InvalidArgumentException|HydratorTypeError $e){
            throw new Exception\HydratorException($e->getMessage(),$e->getCode(),$e);
         }
+    }
 
+    private function verifyIfRequest(array $data,ClassInfo $classInfo,?string $mapWay = null): void
+    {
+        if(RequestField::class !== $mapWay || empty($classInfo->verifyRules)){
+            return;
+        }
+        //todo
     }
 
 

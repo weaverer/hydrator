@@ -5,6 +5,7 @@ namespace Weaverer\Hydrator\Tests;
 
 use Weaverer\Hydrator\Attribute\RequestField;
 use Weaverer\Hydrator\Exception\HydratorException;
+use Weaverer\Hydrator\Parser\ClassPropertyParser;
 use Weaverer\Hydrator\Tests\TestClass\ClassDemo;
 use Weaverer\Hydrator\Tests\TestClass\StringEnum;
 
@@ -47,7 +48,13 @@ class ClassDemoHydrateTest1 extends \PHPUnit\Framework\TestCase
             "discount" => 10.5,
             "isHot" => false
         ];
+
         $hydrator = new ClassDemo($data,RequestField::class);
+        $startMemory = memory_get_usage();
+        $a = json_decode(json_encode(ClassPropertyParser::getClassCachePools()));
+        $endMemory = memory_get_usage();
+        $memoryUsed = $endMemory - $startMemory;
+        echo "Memory used: $memoryUsed bytes\n";
         $this->assertEquals($result, $hydrator->toArray());
     }
 
@@ -312,6 +319,5 @@ class ClassDemoHydrateTest1 extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($hydrator->date, "2021-01-01 00:00:00+9");
     }
-
 
 }

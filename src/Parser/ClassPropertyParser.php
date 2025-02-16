@@ -9,6 +9,7 @@ use Weaverer\Hydrator\Interface\AnnotationInterface;
 use Weaverer\Hydrator\Interface\MapFromInterface;
 use Weaverer\Hydrator\Interface\ValueConvertInterface;
 use Weaverer\Hydrator\Types\Annotations;
+use Weaverer\Hydrator\Types\ClassInfo;
 use Weaverer\Hydrator\Types\ListType;
 use Weaverer\Hydrator\Types\DataType;
 use Weaverer\Hydrator\Types\PropertyInfo;
@@ -37,10 +38,10 @@ class ClassPropertyParser
     }
 
     /**
-     * @return array<string,PropertyInfo>
+     * @return ClassInfo
      * @throws \ReflectionException
      */
-    public function getAccessibleProperties(): array
+    public function getAccessibleProperties(): ClassInfo
     {
         if (isset(self::$classCachePools[$this->className])) {
             return self::$classCachePools[$this->className];
@@ -58,8 +59,9 @@ class ClassPropertyParser
             }
             $result[$property->getName()] = $this->parseProperty($property, $refType);
         }
-        self::$classCachePools[$this->className] = $result;
-        return $result;
+        $classInfo = new ClassInfo($result);
+        self::$classCachePools[$this->className] = $classInfo;
+        return $classInfo;
     }
 
     private function parseProperty(ReflectionProperty $property, \ReflectionNamedType $refType): DataType
@@ -136,6 +138,11 @@ class ClassPropertyParser
 
         }
         return $annotations;
+    }
+
+    public static function getClassCachePools(): array
+    {
+        return self::$classCachePools;
     }
 
 
