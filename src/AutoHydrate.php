@@ -27,7 +27,6 @@ class AutoHydrate implements \ArrayAccess, ToJsonInterface
             $this->hydrate($data, $mapWay);
             $this->afterHydrate();
         }
-
     }
 
     /**
@@ -41,7 +40,5 @@ class AutoHydrate implements \ArrayAccess, ToJsonInterface
     {
         (new Hydrator($this))->hydrate($data,$mapWay);
     }
-
-
 
 }

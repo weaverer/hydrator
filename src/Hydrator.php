@@ -5,21 +5,24 @@ namespace Weaverer\Hydrator;
 
 use Weaverer\Hydrator\Attribute\RequestField;
 use Weaverer\Hydrator\Exception\HydratorTypeError;
+use Weaverer\Hydrator\Exception\ValidateException;
 use Weaverer\Hydrator\Founder\FounderFactory;
 use Weaverer\Hydrator\Parser\ClassPropertyParser;
 use Weaverer\Hydrator\Types\ClassInfo;
 use Weaverer\Hydrator\Types\PropertyInfo;
+use Weaverer\Hydrator\Validation\RequestValidator;
 
 class Hydrator
 {
 
-    public object $instance;
+    public AutoHydrate $instance;
 
 
-    public function __construct(object $object)
+    public function __construct(AutoHydrate $object)
     {
         $this->instance = $object;
     }
+
     /**
      * @param array|object|null $data
      * @param class-string|null $mapWay
@@ -34,8 +37,8 @@ class Hydrator
             $data = (array)$data;
         }
         $classInfo = (new ClassPropertyParser($this->instance))->getAccessibleProperties();
-        $this->verifyIfRequest($data,$classInfo,$mapWay);
-        if(empty($data)){//如果数据为空,则直接返回(放在校验之后,是为了先走请求参数的校验规则)
+        $this->verifyFromRequest($data, $classInfo, $mapWay);
+        if (empty($data)) {//如果数据为空,则直接返回(放在校验之后,是为了先走请求参数的校验规则)
             return;
         }
         try {
@@ -46,20 +49,20 @@ class Hydrator
                     continue;
                 }
                 $value = $data[$fromIndex];
-                $newValue = FounderFactory::createFounder($propertyInfo)->found($value,$mapWay);
+                $newValue = FounderFactory::createFounder($propertyInfo)->found($value, $mapWay);
                 $this->setPropertyValue($propertyName, $newValue);
             }
-        }catch (\TypeError|\InvalidArgumentException|HydratorTypeError $e){
-           throw new Exception\HydratorException($e->getMessage(),$e->getCode(),$e);
+        } catch (\TypeError|\InvalidArgumentException|HydratorTypeError $e) {
+            throw new Exception\HydratorException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    private function verifyIfRequest(array $data,ClassInfo $classInfo,?string $mapWay = null): void
+    private function verifyFromRequest(array $data, ClassInfo $classInfo, ?string $mapWay = null): void
     {
-        if(RequestField::class !== $mapWay || empty($classInfo->verifyRules)){
+        if (RequestField::class !== $mapWay || empty($classInfo->verifyRules)) {
             return;
         }
-        //todo
+        $this->instance->validate($data, $classInfo->verifyRules, $classInfo->verifyMessages??[], $classInfo->verifyAttributes??[]);
     }
 
 
