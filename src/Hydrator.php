@@ -57,12 +57,25 @@ class Hydrator
         }
     }
 
+    /**
+     * 检验请求参数
+     * @param array $data
+     * @param ClassInfo $classInfo
+     * @param string|null $mapWay
+     * @return void
+     * @throws ValidateException
+     */
     private function verifyFromRequest(array $data, ClassInfo $classInfo, ?string $mapWay = null): void
     {
         if (RequestField::class !== $mapWay || empty($classInfo->verifyRules)) {
             return;
         }
-        $this->instance->validate($data, $classInfo->verifyRules, $classInfo->verifyMessages??[], $classInfo->verifyAttributes??[]);
+        if($validator = $this->instance->validator()){
+            $validate = $validator->make($data, $classInfo->verifyRules, $classInfo->verifyMessages, $classInfo->verifyAttributes);
+            if ($validate->fails()) {
+                throw new ValidateException($validate->messages()->getMessages());
+            }
+        }
     }
 
 

@@ -32,10 +32,10 @@ class ClassInfo
             $requestFrom = $property->attributes?->mapFrom[RequestField::class] ?? null;
             if (null !== $requestFrom) {
                 [$rule, $message] = $requestFrom->getValidateData();
-                $rule && $rules[] = $rule;
-                $message && $messages[] = $message;
+                $rule && $rules += $rule;
+                $message && $messages +=$message;
                 $attribute = $requestFrom->getAttribute();
-                $attribute && $attributes[] = $attribute;
+                $attribute && $attributes += $attribute;
             }
         }
         if (!empty($rules)) {
