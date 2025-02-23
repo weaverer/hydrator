@@ -16,4 +16,8 @@ class Product extends BaseBean
 
     #[RequestField('product_price', '商品价格', ['between:0,9999','numeric'])]
     public float $productPrice;
+
+    /** @var string[]  */
+    #[RequestField('product_tag', '商品tag', ['array',"max:2"])]
+    public array $tags;
 }

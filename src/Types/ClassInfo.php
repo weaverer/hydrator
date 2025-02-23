@@ -33,10 +33,26 @@ class ClassInfo
             if (null !== $requestFrom) {
                 [$rule, $message] = $requestFrom->getValidateData();
                 $rule && $rules += $rule;
-                $message && $messages +=$message;
+                $message && $messages += $message;
                 $attribute = $requestFrom->getAttribute();
                 $attribute && $attributes += $attribute;
+
+                //枚举类型自动添加in验证规则
+                $enumValues = $property->enumType?->values;
+                if ($enumValues) {
+                    if (empty($rule) || !array_filter(array_keys($rule), function ($item) {
+                            return str_starts_with($item, 'in:');
+                        })) {
+                        if(isset($rules[$requestFrom->getMapFromName()])){
+                            $rules[$requestFrom->getMapFromName()][] = 'in:' . implode(',', $enumValues);
+                        }else{
+                            $rules[$requestFrom->getMapFromName()] = ['in:' . implode(',', $enumValues)];
+                        }
+                    }
+                }
             }
+
+
         }
         if (!empty($rules)) {
             $this->verifyRules = $rules;

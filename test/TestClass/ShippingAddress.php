@@ -20,7 +20,7 @@ class ShippingAddress extends BaseBean
     #[RequestField('city', '城市',['required','string',"min:6","max:255"])]
     public string $city;
 
-    #[RequestField('state', '省份',['required','string',"min:6","max:255"])]
+    #[RequestField('state', '省份',['required_if:country,US','string',"min:2","max:255"])]
     public string $state;
 
     #[RequestField('postal_code', 'string')]

@@ -12,7 +12,7 @@ class ValidateException extends \Exception
         parent::__construct("param error", $code, $previous);
     }
 
-    public function getErrors()
+    public function getErrors():array
     {
         return $this->errors;
     }

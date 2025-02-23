@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Weaverer\Hydrator\Founder;
 
+use Weaverer\Hydrator\Exception\HydratorTypeError;
 use Weaverer\Hydrator\Utils;
 
 class ScalarFounder extends Founder
@@ -27,6 +28,7 @@ class ScalarFounder extends Founder
     /**
      * @param mixed $value
      * @return int
+     * @throws HydratorTypeError
      */
     private function foundIntType(mixed $value): int
     {
@@ -43,13 +45,17 @@ class ScalarFounder extends Founder
      * 是否是浮点数
      * @param mixed $value
      * @return float
+     * @throws HydratorTypeError
      */
     private function foundFloatType(mixed $value): float
     {
         if (is_float($value)) {
             return $value;
         }
-        if (is_string($value) && is_numeric($value) && is_float($value + 0)) {
+        if (is_string($value) && is_numeric($value)) {
+            return (float)$value;
+        }
+        if (is_int($value)) {
             return (float)$value;
         }
         $this->throwTypeError(Utils::FLOAT, $value);
@@ -59,6 +65,7 @@ class ScalarFounder extends Founder
      * 是否是布尔值
      * @param mixed $value
      * @return bool
+     * @throws HydratorTypeError
      */
     private function foundBoolType(mixed $value): bool
     {
@@ -72,6 +79,7 @@ class ScalarFounder extends Founder
      * 是否是字符串
      * @param mixed $value
      * @return string
+     * @throws HydratorTypeError
      */
     private function foundStringType(mixed $value): string
     {
